@@ -1,0 +1,253 @@
+﻿@{
+    ViewBag.Title = "Welcome to CineVault";
+}
+
+<!-- Hero Section -->
+<section class="cinema-hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Welcome to CineVault</h1>
+        <p class="hero-subtitle">The ultimate destination for movie enthusiasts and critics</p>
+        <div style="margin-top: 40px;">
+            <a href="@Url.Action("Index", "Discussion")" class="btn btn-primary" style="margin-right: 20px;">
+                <i class="fas fa-film"></i>
+                Explore Movies
+            </a>
+            <a href="@Url.Action("Create", "Discussion")" class="btn btn-outline-primary">
+                <i class="fas fa-plus-circle"></i>
+                Start Discussion
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section style="padding: 80px 0;">
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3>Discover Films</h3>
+            <p>
+                Explore an extensive collection of movie discussions spanning all genres,
+                eras, and styles. From blockbusters to indie gems, find your next favorite film.
+            </p>
+            <a href="@Url.Action("Index", "Discussion")" class="feature-link">
+                Start Exploring <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h3>Join Discussions</h3>
+            <p>
+                Connect with fellow cinephiles and share your thoughts on the movies that matter.
+                Rate, review, and engage in meaningful conversations about cinema.
+            </p>
+            <a href="@Url.Action("Login", "Account")" class="feature-link">
+                Join Community <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <h3>Rate & Review</h3>
+            <p>
+                Share your opinions and help others discover great films. Your ratings and
+                reviews contribute to a community-driven movie recommendation system.
+            </p>
+            <a href="@Url.Action("Create", "Discussion")" class="feature-link">
+                Share Opinion <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section">
+    <div class="cta-content">
+        <h2>Ready to dive into the world of cinema?</h2>
+        <p>Join thousands of movie lovers who trust CineVault for film discovery and discussion</p>
+        <div class="cta-buttons">
+            <a href="@Url.Action("Register", "Account")" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i>
+                Join CineVault
+            </a>
+            <a href="@Url.Action("Index", "Discussion")" class="btn btn-outline-primary">
+                <i class="fas fa-eye"></i>
+                Browse Movies
+            </a>
+        </div>
+    </div>
+</section>
+
+<style>
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 30px;
+    }
+
+    .feature-card {
+        background: var(--secondary-bg);
+        border-radius: 20px;
+        padding: 40px 30px;
+        text-align: center;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--gradient-accent);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        border-color: var(--accent-gold);
+    }
+
+    .feature-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        background: var(--gradient-accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        box-shadow: 0 8px 20px rgba(245, 200, 66, 0.3);
+    }
+
+    .feature-icon i {
+        font-size: 2rem;
+        color: var(--text-primary);
+    }
+
+    .feature-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: var(--text-primary);
+        font-family: 'Orbitron', monospace;
+    }
+
+    .feature-card p {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 25px;
+    }
+
+    .feature-link {
+        color: var(--accent-gold);
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .feature-link:hover {
+        color: var(--text-primary);
+        text-decoration: none;
+        transform: translateX(5px);
+    }
+
+    .cta-section {
+        background: var(--tertiary-bg);
+        padding: 80px 0;
+        text-align: center;
+        margin-top: 80px;
+        border-top: 1px solid var(--border-color);
+        position: relative;
+    }
+
+    .cta-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:
+            radial-gradient(circle at 30% 70%, rgba(245, 200, 66, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 70% 30%, rgba(229, 9, 20, 0.05) 0%, transparent 50%);
+        z-index: 0;
+    }
+
+    .cta-content {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 30px;
+    }
+
+    .cta-section h2 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: var(--text-primary);
+        font-family: 'Orbitron', monospace;
+    }
+
+    .cta-section p {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        margin-bottom: 40px;
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .cta-buttons .btn {
+        padding: 15px 30px;
+        font-size: 1.1rem;
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .features-grid {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+        }
+
+        .cta-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+
+            .cta-buttons .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+    }
+</style>

@@ -1,0 +1,56 @@
+﻿@model Common.DTOs.CreateDiscussionDTO
+@{
+    ViewBag.Title = "Edit Discussion";
+}
+
+<h2>Edit Discussion</h2>
+
+@using (Html.BeginForm("Edit", "Discussion", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form" }))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.MovieTitle)
+        @Html.TextBoxFor(m => m.MovieTitle, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Year)
+        @Html.TextBoxFor(m => m.Year, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Genre)
+        @Html.TextBoxFor(m => m.Genre, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.ImdbRating)
+        @Html.TextBoxFor(m => m.ImdbRating, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Synopsis)
+        @Html.TextAreaFor(m => m.Synopsis, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.DurationMin)
+        @Html.TextBoxFor(m => m.DurationMin, new { @class = "form-control" })
+    </div>
+
+    <!-- Slika -->
+    <div class="form-group">
+        @Html.Label("Poster Image")
+        <input type="file" name="PosterFile" class="form-control" accept="image/*" />
+        @if (!string.IsNullOrEmpty(Model.PosterUrl))
+        {
+            <div style="margin-top:10px;">
+                <p>Current Image:</p>
+                <img src="@Model.PosterUrl" style="max-height: 200px;" />
+            </div>
+        }
+    </div>
+
+    <br />
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+}

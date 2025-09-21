@@ -1,0 +1,24 @@
+﻿@model Common.DiscussionEntity
+
+@{
+    ViewBag.Title = "Delete Discussion";
+}
+
+<h2>Delete Discussion</h2>
+
+<div class="alert alert-warning">
+    Are you sure you want to delete this discussion?
+</div>
+
+<div>
+    <strong>Movie:</strong> @Model.MovieTitle<br />
+    <strong>Year:</strong> @Model.Year<br />
+    <strong>Genre:</strong> @Model.Genre<br />
+</div>
+
+@using (Html.BeginForm("Delete", "Discussion", FormMethod.Post, new { @class = "mt-3" }))
+{
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a href="@Url.Action("Index", "Discussion")" class="btn btn-secondary">Cancel</a>
+}

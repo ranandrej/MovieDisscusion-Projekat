@@ -1,0 +1,48 @@
+﻿@model Common.DTOs.AddCommentDTO
+@{
+    var discussion = ViewBag.Discussion as Common.DiscussionEntity;
+    var comments = ViewBag.Comments as List<Common.CommentEntity>;
+}
+
+<p><img src="@discussion.PosterUrl" style="max-width:300px;" /></p>
+<h3>@discussion.MovieTitle (@discussion.Year)</h3>
+<p><strong>Genre:</strong> @discussion.Genre</p>
+<p><strong>IMDB:</strong> @discussion.ImdbRating</p>
+<p><strong>Duration:</strong> @discussion.DurationMin min</p>
+<p><strong>Synopsis:</strong> @discussion.Synopsis</p>
+<p><strong>Reactions:</strong> 👍 @discussion.Positive / 👎 @discussion.Negative</p>
+<p><strong>Created:</strong> @discussion.CreatedUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</p>
+<p><strong>By:</strong> @discussion.CreatorEmail</p>
+
+<hr />
+
+<h3>Leave a Comment</h3>
+@using (Html.BeginForm("AddComment", "Discussion", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.DiscussionId)
+    @Html.TextAreaFor(m => m.Text, new { @class = "form-control", rows = 3 })
+    @Html.ValidationMessageFor(m => m.Text)
+    <button type="submit" class="btn btn-primary mt-2">Post Comment</button>
+}
+
+<a href="@Url.Action("Index", "Discussion")" class="btn btn-secondary mt-2">Back to Discussions</a>
+
+<hr />
+
+<h3>Comments</h3>
+@if (comments.Any())
+{
+    <div class="comment-list mt-2">
+        @foreach (var comment in comments)
+        {
+            <div class="comment-item">
+                <strong>@comment.AuthorEmail:</strong> @comment.Text
+                <div style="font-size: small; color: gray;">@comment.CreatedUtc.ToLocalTime().ToString("g")</div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>No comments yet.</p>
+}

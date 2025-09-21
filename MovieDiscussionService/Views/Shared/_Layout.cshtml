@@ -1,0 +1,363 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - CineVault</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Cinematic Header -->
+    <header class="cinema-header">
+        <nav class="cinema-nav">
+            <div class="nav-container">
+                <!-- Logo / Brand -->
+                <a class="cinema-brand" href="@Url.Action("Index", "Discussion")">
+                    <i class="fas fa-film cinema-icon"></i>
+                    <span class="brand-text">CineVault</span>
+                    <div class="brand-subtitle">Cinema Discussion Hub</div>
+                </a>
+
+                <!-- Navigation Menu -->
+                <div class="nav-menu">
+                    <a href="@Url.Action("Index", "Discussion")" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Discover</span>
+                    </a>
+                    <a href="@Url.Action("Create", "Discussion")" class="nav-link">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Create</span>
+                    </a>
+                </div>
+
+                <!-- User Section -->
+                <div class="user-section">
+                    @if (Session["email"] != null)
+                    {
+                        var email = Session["email"].ToString().ToLower();
+                        var usersTable = Common.Storage.GetTable("Users");
+                        var entity = usersTable.Execute(
+                            Microsoft.WindowsAzure.Storage.Table.TableOperation.Retrieve<Common.UserEntity>("User", email)
+                        ).Result as Common.UserEntity;
+
+                        if (entity != null)
+                        {
+                            <!-- User Profile -->
+                            <div class="user-profile">
+                                <a href="@Url.Action("EditProfile", "Account")" class="profile-link">
+                                    <img src="@entity.PhotoUrl"
+                                         onerror="this.src='/Content/no-avatar.png';"
+                                         class="user-avatar" />
+                                    <div class="user-info">
+                                        <span class="user-name">@entity.FullName</span>
+                                        <span class="user-role">Cinephile</span>
+                                    </div>
+                                </a>
+                                <a href="@Url.Action("Logout", "Account")" class="btn btn-outline-danger btn-sm logout-btn">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <!-- Login Button -->
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-primary cinema-login">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Enter Vault
+                        </a>
+                    }
+                </div>
+            </div>
+        </nav>
+
+        <!-- Decorative Film Strip -->
+        <div class="film-strip">
+            <div class="film-holes"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="cinema-main">
+        <div class="content-wrapper">
+            @RenderBody()
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="cinema-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <i class="fas fa-film"></i>
+                <span>CineVault</span>
+            </div>
+            <div class="footer-text">
+                Where every movie deserves a discussion
+            </div>
+        </div>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <style>
+        /* Cinema Header Styles */
+        .cinema-header {
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            box-shadow: 0 4px 20px var(--shadow-color);
+            position: relative;
+            z-index: 1000;
+        }
+
+        .cinema-nav {
+            padding: 20px 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .cinema-brand {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .cinema-brand:hover {
+            transform: scale(1.05);
+            color: var(--accent-gold);
+        }
+
+        .cinema-icon {
+            font-size: 2.5rem;
+            margin-right: 15px;
+            color: var(--accent-gold);
+            animation: filmRotate 4s linear infinite;
+        }
+
+        @@keyframes filmRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .brand-text {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: -5px;
+            font-weight: 300;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 12px 20px;
+            border-radius: 25px;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-gold);
+            background: rgba(245, 200, 66, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+            padding: 10px 15px;
+            border-radius: 50px;
+            background: var(--tertiary-bg);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .profile-link:hover {
+            background: var(--secondary-bg);
+            border-color: var(--accent-gold);
+            color: var(--text-primary);
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-gold);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .logout-btn {
+            padding: 8px 15px;
+        }
+
+        .cinema-login {
+            padding: 12px 25px;
+            font-weight: 600;
+        }
+
+        /* Film Strip Decoration */
+        .film-strip {
+            height: 8px;
+            background: var(--accent-gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .film-holes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0px,
+                transparent 15px,
+                var(--primary-bg) 15px,
+                var(--primary-bg) 25px
+            );
+            animation: filmScroll 10s linear infinite;
+        }
+
+        @@keyframes filmScroll {
+            from { transform: translateX(-50%); }
+            to { transform: translateX(0%); }
+        }
+
+        /* Main Content */
+        .cinema-main {
+            min-height: calc(100vh - 200px);
+            padding: 40px 0;
+        }
+
+        .content-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        /* Footer */
+        .cinema-footer {
+            background: var(--primary-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        .footer-brand i {
+            font-size: 1.5rem;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Responsive Design */
+        @@media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-menu {
+                order: 2;
+                gap: 15px;
+            }
+
+            .user-section {
+                order: 1;
+            }
+
+            .cinema-icon {
+                font-size: 2rem;
+            }
+
+            .brand-text {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</body>
+</html>

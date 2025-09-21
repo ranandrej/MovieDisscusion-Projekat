@@ -1,0 +1,33 @@
+﻿@model Common.DTOs.LoginDTO
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2 class="text-center mb-4">Login</h2>
+
+<div class="container" style="max-width: 400px;">
+    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "card p-4 shadow-sm" }))
+    {
+        <!-- Prikaz validacionih poruka -->
+        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Enter your email" })
+            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="mb-3">
+            @Html.LabelFor(m => m.Password, new { @class = "form-label" })
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Enter your password" })
+            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+
+        <div class="mt-3 text-center">
+            <span>Don't have an account?</span>
+            <a href="@Url.Action("Register", "Account")">Register here</a>
+        </div>
+    }
+</div>

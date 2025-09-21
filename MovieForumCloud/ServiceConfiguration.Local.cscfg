@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="MovieForumCloud" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="6" osVersion="*" schemaVersion="2015-04.2.6">
+  <Role name="MovieDiscussionService">
+    <Instances count="2" />
+    <ConfigurationSettings>
+      <Setting name="DataConnectionString" value="UseDevelopmentStorage=true" />
+    </ConfigurationSettings>
+  </Role>
+  <Role name="HealthStatusService">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="DataConnectionString" value="UseDevelopmentStorage=true" />
+    </ConfigurationSettings>
+  </Role>
+  <Role name="NotificationService">
+    <Instances count="3" />
+    <ConfigurationSettings>
+      <Setting name="DataConnectionString" value="UseDevelopmentStorage=true" />
+		<Setting name="SmtpHost" value="localhost" />
+		<Setting name="SmtpPort" value="25" />
+		<Setting name="SmtpUser" value="" />
+		<Setting name="SmtpPass" value="" />
+		<Setting name="FromEmail" value="noreply@test.com" />
+    </ConfigurationSettings>
+  </Role>
+  <Role name="HealthMonitoringService">
+    <Instances count="2" />
+    <ConfigurationSettings>
+      <Setting name="DataConnectionString" value="UseDevelopmentStorage=true" />
+		<Setting name="SmtpHost" value="localhost" />
+		<Setting name="SmtpPort" value="25" />
+		<Setting name="SmtpUser" value="" />
+		<Setting name="SmtpPass" value="" />
+		<Setting name="FromEmail" value="noreply@test.local" />
+    </ConfigurationSettings>
+  </Role>
+</ServiceConfiguration>

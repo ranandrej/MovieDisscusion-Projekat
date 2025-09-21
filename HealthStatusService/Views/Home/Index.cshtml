@@ -1,0 +1,95 @@
+﻿@model List<HealthStatusService.Models.HealthStatusViewModel>
+
+@{
+    ViewBag.Title = "Health Status";
+}
+
+<h2>Health Status for the last 2 hours</h2>
+
+@foreach (var service in Model)
+{
+    <div class="card mb-4">
+        <div class="card-header">
+            <strong>@service.ServiceName</strong> - Uptime: @service.UptimePercentage.ToString("F2")%
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Line chart -->
+                <div class="col-md-8">
+                    <canvas id="line_@service.ServiceName.Replace(" ", "_")" height="150"></canvas>
+                </div>
+                <!-- Doughnut chart -->
+                <div class="col-md-4">
+                    <canvas id="pie_@service.ServiceName.Replace(" ", "_")" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script>
+        @foreach (var service in Model)
+        {
+            <text>
+                // Line chart (trend)
+                var ctxLine_@service.ServiceName.Replace(" ", "_") =
+                    document.getElementById('line_@service.ServiceName.Replace(" ", "_")').getContext('2d');
+
+                new Chart(ctxLine_@service.ServiceName.Replace(" ", "_"), {
+                    type: 'line',
+                    data: {
+                        labels: [@(Html.Raw(string.Join(",", service.Records
+                            .Select(r => "'" + r.TimestampUtc.ToLocalTime().ToString("HH:mm:ss") + "'"))))],
+                        datasets: [{
+                            label: 'Status (1=OK, 0=NOT_OK)',
+                            data: [@(Html.Raw(string.Join(",", service.Records
+                                .Select(r => r.Status == "OK" ? "1" : "0"))))],
+                            fill: false,
+                            borderColor: 'rgb(75, 192, 192)',
+                            tension: 0.1,
+                            pointRadius: 4
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            legend: { display: true, position: 'bottom' }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                suggestedMax: 1,
+                                ticks: {
+                                    stepSize: 1,
+                                    callback: function (value) {
+                                        return value === 1 ? 'OK' : 'NOT_OK';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Pie chart (uptime vs downtime)
+                var ctxPie_@service.ServiceName.Replace(" ", "_") =
+                    document.getElementById('pie_@service.ServiceName.Replace(" ", "_")').getContext('2d');
+
+                new Chart(ctxPie_@service.ServiceName.Replace(" ", "_"), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ["OK", "NOT_OK"],
+                        datasets: [{
+                            data: [@Math.Round(service.UptimePercentage, 2), @(100 - Math.Round(service.UptimePercentage, 2))],
+                            backgroundColor: ["#4caf50", "#f44336"] // ✅ OK = zeleno, NOT_OK = crveno
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            legend: { display: true, position: 'bottom' }
+                        }
+                    }
+                });
+            </text>
+        }
+    </script>
+}

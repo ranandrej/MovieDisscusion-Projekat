@@ -1,0 +1,60 @@
+﻿@model Common.DTOs.CreateDiscussionDTO
+
+@{
+    ViewBag.Title = "Create Discussion";
+}
+
+<h2>Create New Discussion</h2>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
+}
+
+@using (Html.BeginForm("Create", "Discussion", FormMethod.Post, new { @class = "form", enctype = "multipart/form-data" }))
+{
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.MovieTitle)
+        @Html.TextBoxFor(m => m.MovieTitle, new { @class = "form-control", placeholder = "Enter movie title" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Year)
+        @Html.TextBoxFor(m => m.Year, new { @class = "form-control", placeholder = "Enter movie year" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Genre)
+        @Html.TextBoxFor(m => m.Genre, new { @class = "form-control", placeholder = "Enter movie genre" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.ImdbRating)
+        @Html.TextBoxFor(m => m.ImdbRating, new { @class = "form-control", placeholder = "Enter IMDB rating" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Synopsis)
+        @Html.TextAreaFor(m => m.Synopsis, new { @class = "form-control", placeholder = "Enter movie synopsis" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.DurationMin)
+        @Html.TextBoxFor(m => m.DurationMin, new { @class = "form-control", placeholder = "Enter movie duration in minutes" })
+    </div>
+
+    <!-- Otpremanje slike -->
+    <div class="form-group">
+        @Html.Label("Poster Image")
+        <input type="file" name="PosterFile" class="form-control" accept="image/*" />
+        <small class="form-text text-muted">Please upload a movie poster image (jpeg, png, gif, etc.).</small>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Discussion</button>
+}
