@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -27,6 +28,21 @@ namespace NotificationService
         private CloudTable _logTable;
         private IEmailSender _email;
         private HttpListener _listener;
+        private readonly string _logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "notification_log.txt");
+
+        private void LogToFile(string message)
+        {
+            try
+            {
+                File.AppendAllText(_logFilePath, $"{DateTime.Now:u} - {message}{Environment.NewLine}");
+            }
+            catch (Exception ex)
+            {
+                // Ako ni logovanje ne uspe, bar nemoj da crashuješ
+                Trace.TraceError("LogToFile greška: " + ex.Message);
+            }
+        }
+
         public override void Run()
         {
             Trace.TraceInformation("NotificationService is running");
@@ -144,8 +160,10 @@ namespace NotificationService
                     try
                     {
                         // 1. Deserialize message
+                        LogToFile("Received message from queue.");
 
                         var payload = JsonConvert.DeserializeObject<NotifyMessage>(msg.AsString);
+                        LogToFile($"Deserialized message. DiscussionId: {payload.DiscussionId}, CommentId: {payload.CommentId}");
 
                         // 2. Fetch all subscribers
 
@@ -159,12 +177,22 @@ namespace NotificationService
                             .Where(e => !string.IsNullOrWhiteSpace(e))
                             .Distinct()
                             .ToList();
+                        LogToFile($"Found {followers.Results.Count} followers.");
+
 
 
                         var commentsTable = _subsTable.ServiceClient.GetTableReference("Comments"); // koristi isti tableClient
                         var retrieve = TableOperation.Retrieve<CommentEntity>(payload.DiscussionId, payload.CommentId);
                         var resultComment = await commentsTable.ExecuteAsync(retrieve);
                         var commentEntity = resultComment.Result as CommentEntity;
+                        if (commentEntity == null)
+                        {
+                            LogToFile("Comment not found in Comments table.");
+                        }
+                        else
+                        {
+                            LogToFile("Fetched comment: " + commentEntity.Text);
+                        }
 
                         string userNameOrEmail = commentEntity?.CreatorEmail ?? commentEntity?.AuthorEmail ?? "Nepoznat";
                         string commentText = commentEntity?.Text ?? $"Novi komentar (ID: {payload.CommentId})";
@@ -173,8 +201,18 @@ namespace NotificationService
                         // int sentCount = 0;
 
                         // 3. Send emails
+                        LogToFile($"Sending email to {recipientList.Count} recipients...");
 
-                        await _email.SendAsync(recipientList, "Novi komentar na diskusiji", body);
+                        try
+                        {
+                            LogToFile($"Sending email to {recipientList.Count} recipients...");
+                            await _email.SendAsync(recipientList, "Novi komentar na diskusiji", body);
+                            LogToFile("Email sent.");
+                        }
+                        catch (Exception ex)
+                        {
+                            LogToFile("Greška prilikom slanja mejla: " + ex.ToString());
+                        }
 
                         // 4. Log notification
                         var sentCount = recipientList.Count;
@@ -185,7 +223,7 @@ namespace NotificationService
                         // 5. Remove message from queue
                         await _queue.DeleteMessageAsync(msg);
 
-                        Trace.TraceInformation($"Processed comment {payload.CommentId}, sent {sentCount} emails");
+                        LogToFile($"Processed comment {payload.CommentId}, sent {sentCount} emails");
                     }
                     catch (Exception ex)
                     {

@@ -105,7 +105,7 @@
             animation: heartbeat 2s ease-in-out infinite;
         }
 
-        @keyframes heartbeat {
+        @@keyframes heartbeat {
             0%, 50%, 100% { transform: scale(1); }
             25%, 75% { transform: scale(1.1); }
         }
@@ -145,7 +145,7 @@
             animation: pulse 2s infinite;
         }
 
-        @keyframes pulse {
+        @@keyframes pulse {
             0% {
                 box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.7);
             }
@@ -186,7 +186,7 @@
             animation: systemScan 3s linear infinite;
         }
 
-        @keyframes systemScan {
+        @@keyframes systemScan {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
@@ -258,7 +258,7 @@
         }
 
         /* Responsive Design */
-        @media (max-width: 768px) {
+        @@media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
                 gap: 20px;

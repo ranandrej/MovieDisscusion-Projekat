@@ -53,22 +53,27 @@ namespace HealthMonitoringService
             var tableClient = storageAccount.CreateCloudTableClient();
             healthCheckTable = tableClient.GetTableReference("HealthCheck");
             alertEmailsTable = tableClient.GetTableReference("AlertEmails");
-            // healthCheckTable.CreateIfNotExistsAsync().Wait();
-            // alertEmailsTable.CreateIfNotExistsAsync().Wait();
+            healthCheckTable.CreateIfNotExistsAsync().Wait();
+            alertEmailsTable.CreateIfNotExistsAsync().Wait();
         }
 
-        public override void Run()
+        public override async void Run()
         {
             Trace.TraceInformation("HealthMonitoringService is running");
             try
             {
-                RunAsync(cancellationTokenSource.Token).Wait();
+                await RunAsync(cancellationTokenSource.Token);
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError("Error in RunAsync: " + ex.ToString());
             }
             finally
             {
                 runCompleteEvent.Set();
             }
         }
+
 
         public override void OnStop()
         {

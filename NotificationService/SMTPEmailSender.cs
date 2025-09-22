@@ -46,7 +46,7 @@ namespace NotificationService
                 using (var client = new SmtpClient(_host, _port))
                 {
                     client.Credentials = new NetworkCredential(_user, _pass);
-                    client.EnableSsl = false; // Papercut test server ne podržava SSL
+                    client.EnableSsl = true; 
                     await client.SendMailAsync(message);
                 }
             }

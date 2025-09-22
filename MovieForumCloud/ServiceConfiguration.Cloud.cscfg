@@ -16,22 +16,22 @@
     <Instances count="3" />
     <ConfigurationSettings>
       <Setting name="DataConnectionString" value="UseDevelopmentStorage=true" />
-		<Setting name="SmtpHost" value="localhost" />
-		<Setting name="SmtpPort" value="25" />
-		<Setting name="SmtpUser" value="" />
-		<Setting name="SmtpPass" value="" />
-		<Setting name="FromEmail" value="noreply@test.com" />
+      <Setting name="SmtpHost" value="smtp.gmail.com" />
+      <Setting name="SmtpPort" value="465" />
+      <Setting name="SmtpUser" value="ranandrej@gmail.com" />
+      <Setting name="SmtpPass" value="scso juvt ohul bzne" />
+      <Setting name="FromEmail" value="noreply@test.com" />
     </ConfigurationSettings>
   </Role>
   <Role name="HealthMonitoringService">
     <Instances count="2" />
     <ConfigurationSettings>
       <Setting name="DataConnectionString" value="UseDevelopmentStorage=true" />
-		<Setting name="SmtpHost" value="localhost" />
-		<Setting name="SmtpPort" value="25" />
-		<Setting name="SmtpUser" value="" />
-		<Setting name="SmtpPass" value="" />
-		<Setting name="FromEmail" value="noreply@test.local" />
+      <Setting name="SmtpHost" value="smtp.gmail.com" />
+      <Setting name="SmtpPort" value="465" />
+      <Setting name="SmtpUser" value="ranandrej@gmail.com" />
+      <Setting name="SmtpPass" value="scso juvt ohul bzne" />
+      <Setting name="FromEmail" value="ranandrej@gmail.com" />
     </ConfigurationSettings>
   </Role>
   <NetworkConfiguration>
